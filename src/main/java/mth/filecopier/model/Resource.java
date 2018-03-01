@@ -12,7 +12,7 @@ public class Resource {
 
     public Resource(String sourcePath, String destination) {
         this.source = new File(sourcePath);
-        this.destination = new File(sourcePath);
+        this.destination = new File(destination);
     }
 
     public File getSource( ) {
