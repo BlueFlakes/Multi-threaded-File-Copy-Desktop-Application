@@ -66,17 +66,7 @@ public class FileCopierController {
     }
 
     private Filter<Resource> getCurrentFilter(String yesOrNo) {
-
-        FileFilterOptions option = null;
-
-        try {
-            option = FileFilterOptions.getOptionByIdentity(yesOrNo);
-        } catch (InvalidChoiceException e) {
-            e.printStackTrace();
-        }
-
-        Filter<Resource> currentFilter = FileFilterFactory.createFileFilter(option);
-
-        return currentFilter;
+        FileFilterOptions option = FileFilterOptions.getOptionOrDefault(yesOrNo, FileFilterOptions.NO_FILTER);
+        return FileFilterFactory.createFileFilter(option);
     }
 }

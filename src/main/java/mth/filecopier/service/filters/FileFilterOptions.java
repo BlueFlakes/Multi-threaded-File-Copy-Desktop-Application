@@ -6,8 +6,8 @@ public enum FileFilterOptions {
     NO_FILTER,
     IGNORE_DUPLICATES_FILTER;
 
-    public static FileFilterOptions getOptionByIdentity(String identity)
-            throws InvalidChoiceException {
+    public static FileFilterOptions getOptionOrDefault(String identity,
+                                                       FileFilterOptions defaultFilter) {
 
         if (identity.equalsIgnoreCase("NO")) {
             return IGNORE_DUPLICATES_FILTER;
@@ -16,6 +16,6 @@ public enum FileFilterOptions {
             return NO_FILTER;
         }
 
-        throw new InvalidChoiceException("Invalid identity: " + identity);
+        return defaultFilter;
     }
 }
