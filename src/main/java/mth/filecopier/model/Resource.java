@@ -2,10 +2,6 @@ package mth.filecopier.model;
 
 import java.io.File;
 
-/**
- * Hello world!
- *
- */
 public class Resource {
     private File source;
     private File destination;
