@@ -66,7 +66,7 @@ public class FileCopierController {
     }
 
     private Filter<Resource> getCurrentFilter(String yesOrNo) {
-        FileFilterOptions option = FileFilterOptions.getOptionOrDefault(yesOrNo, FileFilterOptions.NO_FILTER);
+        FileFilterOptions option = FileFilterOptions.getOptionOrDefault(yesOrNo, FileFilterOptions.IGNORE_DUPLICATES_FILTER);
         return FileFilterFactory.createFileFilter(option);
     }
 }
