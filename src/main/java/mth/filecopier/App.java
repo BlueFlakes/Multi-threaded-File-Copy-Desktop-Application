@@ -1,11 +1,14 @@
 package mth.filecopier;
 
 import mth.filecopier.controller.FileCopierController;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class App {
-    public static void main(String[] args) {
+    private static final ClassPathXmlApplicationContext ctx =
+            new ClassPathXmlApplicationContext("applicationContext.xml");
 
-        FileCopierController copierController = new FileCopierController();
-        copierController.runController();
+    public static void main(String[] args) {
+        FileCopierController fileCopierController = ctx.getBean(FileCopierController.class);
+        fileCopierController.runController();
     }
 }

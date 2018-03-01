@@ -1,6 +1,9 @@
 package mth.filecopier.view;
+import org.springframework.stereotype.Component;
+
 import java.util.Scanner;
 
+@Component
 public class FileCopierView {
     private static final Scanner in = new Scanner(System.in);
 

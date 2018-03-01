@@ -6,7 +6,9 @@ import mth.filecopier.service.Duplicator;
 import mth.filecopier.service.filters.FileFilterFactory;
 import mth.filecopier.service.filters.FileFilterOptions;
 import mth.filecopier.view.FileCopierView;
+import org.springframework.stereotype.Controller;
 
+@Controller
 public class FileCopierController {
     private FileCopierView fileCopierView;
 
