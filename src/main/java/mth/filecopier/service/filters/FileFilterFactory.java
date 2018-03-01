@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public final class FileFilterFactory {
 
-    public static Filter<Resource> createFileFiter(FileFilterOptions deliveredType) {
+    public static Filter<Resource> createFileFilter(FileFilterOptions deliveredType) {
 
         if (deliveredType == FileFilterOptions.IGNORE_DUPLICATES_FILTER) {
             return new IgnoreDuplicatesFilter();
@@ -20,6 +20,6 @@ public final class FileFilterFactory {
             return new NoFilter();
         }
 
-        throw new IllegalStateException("Invalid parameter occured: " + deliveredType);
+        throw new IllegalStateException("Invalid parameter occurred: " + deliveredType);
     }
 }
