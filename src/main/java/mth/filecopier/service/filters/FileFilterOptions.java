@@ -9,10 +9,10 @@ public enum FileFilterOptions {
     public static FileFilterOptions getOptionByIdentity(String identity)
             throws InvalidChoiceException {
 
-        if (identity.equals("NO")) {
+        if (identity.equalsIgnoreCase("NO")) {
             return IGNORE_DUPLICATES_FILTER;
 
-        } else if (identity.equals("YES")) {
+        } else if (identity.equalsIgnoreCase("YES")) {
             return NO_FILTER;
         }
 
