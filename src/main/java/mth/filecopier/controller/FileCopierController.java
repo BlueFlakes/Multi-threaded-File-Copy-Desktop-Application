@@ -4,6 +4,7 @@ import mth.filecopier.abstraction.Filter;
 import mth.filecopier.exceptions.InvalidChoiceException;
 import mth.filecopier.exceptions.InvalidPathException;
 import mth.filecopier.model.Resource;
+import mth.filecopier.service.DestinationPathParser;
 import mth.filecopier.service.Duplicator;
 import mth.filecopier.service.SourcePathParser;
 import mth.filecopier.service.filters.FileFilterFactory;
@@ -16,13 +17,16 @@ import org.springframework.stereotype.Controller;
 public class FileCopierController {
 
     private FileCopierView fileCopierView;
+    private DestinationPathParser destinationPathParser;
     private SourcePathParser sourcePathParser;
 
     public FileCopierController(FileCopierView fileCopierView,
-                                SourcePathParser sourcePathParser) {
+                                SourcePathParser sourcePathParser,
+                                DestinationPathParser destinationPathParser) {
 
         this.fileCopierView = fileCopierView;
         this.sourcePathParser = sourcePathParser;
+        this.destinationPathParser = destinationPathParser;
     }
 
     public void runController() {
@@ -56,6 +60,7 @@ public class FileCopierController {
         String path = "";
 
         try {
+            destination = this.destinationPathParser.retrieveFileDestination(destination);
             path = this.sourcePathParser.retrieveFileName(source)
                     .orElseThrow(InvalidPathException::new);
         } catch (InvalidPathException e) {

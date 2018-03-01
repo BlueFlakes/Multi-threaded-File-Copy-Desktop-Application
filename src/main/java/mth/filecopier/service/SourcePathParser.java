@@ -17,6 +17,7 @@ public class SourcePathParser {
             return Optional.ofNullable(paths[last]);
         }
 
+
         return Optional.empty();
     }
 }
