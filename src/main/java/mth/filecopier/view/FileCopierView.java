@@ -12,12 +12,12 @@ public class FileCopierView {
     }
 
     public String askInputSource() {
-        System.out.println("Enter a file destination: ");
+        System.out.println("Enter a source path file: ");
         return getUserInput();
     }
 
     public String askInputDestination() {
-        System.out.println("Enter a source file: ");
+        System.out.println("Enter a file destination: ");
         return getUserInput();
     }
 
