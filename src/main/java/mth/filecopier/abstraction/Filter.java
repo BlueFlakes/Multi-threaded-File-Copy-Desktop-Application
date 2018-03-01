@@ -1,5 +1,7 @@
 package mth.filecopier.abstraction;
 
+import mth.filecopier.exceptions.ApplicationException;
+
 public interface Filter<T> {
-    boolean validate(T object);
+    void validate(T object) throws ApplicationException;
 }
