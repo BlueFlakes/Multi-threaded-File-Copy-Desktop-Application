@@ -1,6 +1,7 @@
 package mth.filecopier.controller;
 
 import mth.filecopier.abstraction.Filter;
+import mth.filecopier.exceptions.InvalidChoiceException;
 import mth.filecopier.exceptions.InvalidPathException;
 import mth.filecopier.model.Resource;
 import mth.filecopier.service.Duplicator;
@@ -10,15 +11,16 @@ import mth.filecopier.service.filters.FileFilterOptions;
 import mth.filecopier.view.FileCopierView;
 import org.springframework.stereotype.Controller;
 
-import java.util.Optional;
 
 @Controller
 public class FileCopierController {
+
     private FileCopierView fileCopierView;
     private SourcePathParser sourcePathParser;
 
     public FileCopierController(FileCopierView fileCopierView,
                                 SourcePathParser sourcePathParser) {
+
         this.fileCopierView = fileCopierView;
         this.sourcePathParser = sourcePathParser;
     }
@@ -27,35 +29,54 @@ public class FileCopierController {
 
         while (true) {
 
+            Duplicator duplicator = getDuplicator();
 
-            try {
-                String source = this.fileCopierView.askInputSource();
-
-                String destination = getDestination(source);
-
-
-                String yesOrNo = this.fileCopierView.askCopyOrOverWrite();
-
-                FileFilterOptions option = FileFilterOptions.getOptionByIdentity(yesOrNo);
-
-                Filter<Resource> currentFilter = FileFilterFactory.createFileFilter(option);
-
-                Resource currentResource = new Resource(source, destination);
-                Duplicator duplicator = new Duplicator(currentResource, currentFilter);
-
-                Thread thread = new Thread(duplicator);
-                thread.start();
-
-            } catch (Exception e) { e.printStackTrace();}
+            Thread thread = new Thread(duplicator);
+            thread.start();
         }
     }
 
-    private String getDestination(String source) throws InvalidPathException {
-        String destination = this.fileCopierView.askInputDestination();
+    private Duplicator getDuplicator() {
 
-        String path = this.sourcePathParser.retrieveFileName(source)
-                          .orElseThrow(InvalidPathException::new);
+        String source = this.fileCopierView.askInputSource();
+        String destination = this.fileCopierView.askInputDestination();
+        destination = getDestination(source, destination);
+
+        String yesOrNo = this.fileCopierView.askCopyOrOverWrite();
+        Filter<Resource> currentFilter = getCurrentFilter(yesOrNo);
+
+        Resource currentResource = new Resource(source, destination);
+        Duplicator duplicator = new Duplicator(currentResource, currentFilter);
+
+        return duplicator;
+    }
+
+    private String getDestination(String source, String destination) {
+
+        String path = "";
+
+        try {
+            path = this.sourcePathParser.retrieveFileName(source)
+                    .orElseThrow(InvalidPathException::new);
+        } catch (InvalidPathException e) {
+            e.printStackTrace();
+        }
 
         return destination + path;
+    }
+
+    private Filter<Resource> getCurrentFilter(String yesOrNo) {
+
+        FileFilterOptions option = null;
+
+        try {
+            option = FileFilterOptions.getOptionByIdentity(yesOrNo);
+        } catch (InvalidChoiceException e) {
+            e.printStackTrace();
+        }
+
+        Filter<Resource> currentFilter = FileFilterFactory.createFileFilter(option);
+
+        return currentFilter;
     }
 }
