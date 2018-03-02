@@ -1,6 +1,7 @@
 package mth.filecopier.controller;
 
 import mth.filecopier.abstraction.Filter;
+import mth.filecopier.exceptions.ApplicationException;
 import mth.filecopier.exceptions.InvalidChoiceException;
 import mth.filecopier.exceptions.InvalidPathException;
 import mth.filecopier.model.Resource;
@@ -32,15 +33,18 @@ public class FileCopierController {
     public void runController() {
 
         while (true) {
+            try {
+                Duplicator duplicator = getDuplicator();
 
-            Duplicator duplicator = getDuplicator();
-
-            Thread thread = new Thread(duplicator);
-            thread.start();
+                Thread thread = new Thread(duplicator);
+                thread.start();
+            } catch (ApplicationException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
-    private Duplicator getDuplicator() {
+    private Duplicator getDuplicator() throws ApplicationException {
 
         String source = this.fileCopierView.askInputSource();
         String destination = this.fileCopierView.askInputDestination();
@@ -55,33 +59,17 @@ public class FileCopierController {
         return duplicator;
     }
 
-    private String getDestination(String source, String destination) {
+    private String getDestination(String source, String destination) throws InvalidPathException {
+        destination = this.destinationPathParser.retrieveFileDestination(destination);
+        String path = this.sourcePathParser.retrieveFileName(source)
+                                           .orElseThrow(() -> new InvalidPathException("Invalid path delivered"));
 
-        String path = "";
-
-        try {
-            destination = this.destinationPathParser.retrieveFileDestination(destination);
-            path = this.sourcePathParser.retrieveFileName(source)
-                    .orElseThrow(InvalidPathException::new);
-        } catch (InvalidPathException e) {
-            e.printStackTrace();
-        }
 
         return destination + path;
     }
 
-    private Filter<Resource> getCurrentFilter(String yesOrNo) {
-
-        FileFilterOptions option = null;
-
-        try {
-            option = FileFilterOptions.getOptionByIdentity(yesOrNo);
-        } catch (InvalidChoiceException e) {
-            e.printStackTrace();
-        }
-
-        Filter<Resource> currentFilter = FileFilterFactory.createFileFilter(option);
-
-        return currentFilter;
+    private Filter<Resource> getCurrentFilter(String yesOrNo) throws InvalidChoiceException {
+        FileFilterOptions option = FileFilterOptions.getOptionByIdentity(yesOrNo);
+        return FileFilterFactory.createFileFilter(option);
     }
 }
